@@ -1,0 +1,13 @@
+﻿<nav class="navbar navbar-expand-sm">
+	<div class="container">
+		<div class="navbar-header"><h3 class="text-dark">Manager panel</h3></div>
+		<ul class="nav navbar-nav">
+			<li>@Html.ActionLink("Dashboard", "Index", "Home", new { area = "" }, new { @class = "navbar navbar-default my-class" })</li>
+			<li>@Html.ActionLink("Users", "Index", "ContractUser", new { area = "" }, new { @class = "navbar navbar-default my-class" })</li>
+			<li>@Html.ActionLink("Contract Types", "Index", "ContractType", new { area = "" }, new { @class = "navbar navbar-default my-class" })</li>
+			<li>@Html.ActionLink("Contract Requests", "Index", "Request", new { area = "" }, new { @class = "navbar navbar-default my-class" })</li>
+			<li>@Html.ActionLink("Audits", "Index", "Audit", new { area = "" }, new { @class = "navbar navbar-default my-class" })</li>
+			<li>@Html.ActionLink("Logout", "LogOff", "Account", new { area = "" }, new { @class = "navbar navbar-default my-class" })</li>
+		</ul>
+	</div>
+</nav>

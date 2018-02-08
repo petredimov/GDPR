@@ -1,0 +1,38 @@
+﻿@using Client.Models
+@model LoginDetailsViewModel
+@{
+    ViewBag.Title = "Log in";
+}
+
+<div class="panel panel-info panelBackground">
+	<div class="panel-heading"><h1 class="text-dark">Contract management</h1></div>
+	<div class="panel-body">
+		@using (Html.BeginForm("Login", "Account", FormMethod.Post))
+		{
+			<div class="modal-body">	
+				@Html.AntiForgeryToken()
+				<div class="form-horizontal">
+					@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+					
+					<div class="form-group">
+						@Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label" })
+						<div class="col-md-10">
+							@Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+							@Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+						</div>
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })
+						<div class="col-md-10">
+							@Html.PasswordFor(model => model.Password, new { @class = "form-control" })							
+							@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer form-group">
+				<input class="btn btn-info" type="submit" value="Login" />
+			</div>
+		}
+	</div>
+</div>

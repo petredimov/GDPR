@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Client.Models.AuditViewModel>
+@using GridMvc.Html
+
+@{
+	ViewBag.Title = "Index";
+}
+
+<div class="panel panel-info">
+	<div class="panel-heading"><h3 class="text-dark">Audits</h3></div>
+	<div class="panel-body">
+		<hr />
+		@Html.Grid(Model).Columns(columns =>
+			 {
+				 columns.Add(c => c.Id).Titled("Id").Filterable(true);
+				 columns.Add(c => c.Action).Titled("Action").Filterable(true);
+				 columns.Add(c => c.Date).Titled("Date").Filterable(true);
+				 columns.Add(c => c.UserId).Titled("User").Filterable(true);
+				 columns.Add(c => c.Message).Titled("Message").Filterable(true);
+			 }).WithPaging(10).Sortable(true).Selectable(true)
+
+	</div>
+</div>

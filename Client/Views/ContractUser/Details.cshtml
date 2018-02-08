@@ -1,0 +1,73 @@
+﻿@using GridMvc.Html
+@using Client.Models
+@model UserViewModel
+@{
+	ViewBag.Title = "Contract Management";
+}
+
+<div class="panel panel-info panelBackground">
+	<div class="panel-heading"><h4 class="text-dark">User Details</h4></div>
+	<div class="panel-body">
+		<hr />
+		<div class="row">			
+			<div class="col-md-4">
+				<div class="form-group">
+					@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" }):
+					@Html.DisplayFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					@Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" }):
+					@Html.DisplayFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					@Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label" }):
+					@Html.DisplayFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				@Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label" }):
+				@Html.DisplayFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					@Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label" }):
+					@Html.DisplayFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					@Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label" }):
+					@Html.DisplayFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-info panelBackground">
+			<div class="panel-heading"><h4 class="text-dark">Contracts</h4></div>
+			<div class="panel-body">
+				<hr />
+				@Html.Grid(Model.UserContracts).Columns(columns =>
+						  {
+							  columns.Add(c => c.Id).Titled("Contract ID");
+							  columns.Add(c => c.InviteDate).Titled("Invite Date").Filterable(true);
+							  columns.Add(c => c.SigningDate).Titled("Signing Date").Filterable(true);
+							  columns.Add(c => c.Status).Titled("Signed").Filterable(true);
+							  columns.Add(c => c.Type.Name).Titled("Contract Type").Filterable(true);
+							 //columns.Add(c => c.Manager.Name).Titled("Manager").Filterable(true);
+							 columns.Add()
+											   .Encoded(false)
+											   .Sanitized(false)
+											   .SetWidth(30)
+									.RenderValueAs(o => Html.ActionLink("Details", "Details", "ContractType", new { id = o.Type.ID }, null));
+						  }).WithPaging(20).Sortable(true).Selectable(true)
+			</div>
+		</div>
+	</div>
+
+</div>

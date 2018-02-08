@@ -1,0 +1,29 @@
+﻿@using GridMvc.Html
+@using Client.Models
+
+@model ContractViewModel
+
+@{
+	ViewBag.Title = "Contract";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel-group">
+	<div class="panel panel-info panelBackground">
+		<div class="panel-heading"><h3 class="text-dark">User details</h3></div>
+		<div class="panel-body">
+			@Html.Partial("_UserDetails", @Model.User)
+		</div>
+	</div>
+	<br />
+	<div class="panel panel-info panelBackground">
+		<div class="panel-heading"><h4 class="text-dark">Contract details:  @Model.Type.Name</h4></div>
+		<div class="panel-body">
+			@Html.Partial("_ContractDetail", @Model)
+
+		</div>
+	</div>
+</div>
+
+
+

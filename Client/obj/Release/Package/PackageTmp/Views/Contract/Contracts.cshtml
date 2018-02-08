@@ -1,0 +1,30 @@
+﻿@using GridMvc.Html
+@using Client.Models
+
+@model List<ContractViewModel>
+
+@{
+    ViewBag.Title = "Contracts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="panel panel-info panelBackground">
+    <div class="panel-heading"><h4 class="text-dark">Contracts</h4></div>
+    <div class="panel-body">
+        <hr />
+        @Html.Grid(Model).Columns(columns =>
+   {
+       columns.Add(c => c.Id).Titled("Contract ID");
+       columns.Add(c => c.InviteDate).Titled("Invite Date").Filterable(true);
+       columns.Add(c => c.SigningDate).Titled("Signing Date").Filterable(true);
+       columns.Add(c => c.Status).Titled("Signed").Filterable(true);
+       columns.Add(c => c.Type.Name).Titled("Contract Type").Filterable(true);
+       //columns.Add(c => c.Manager.Name).Titled("Manager").Filterable(true);
+       //columns.Add()
+       //                  .Encoded(false)
+       //                  .Sanitized(false)
+       //                  .SetWidth(30)
+       //       .RenderValueAs(o => Html.ActionLink("Details", "Details", "ContractType", new { id = o.Type.ID }, null));
+   }).WithPaging(20).Sortable(true).Selectable(true)
+    </div>
+</div>
+

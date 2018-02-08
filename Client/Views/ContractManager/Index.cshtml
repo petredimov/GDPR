@@ -1,0 +1,129 @@
+﻿@using GridMvc.Html
+@using Client.Models
+@model IEnumerable<UserViewModel>
+
+@{
+    ViewBag.Title = "Contract Management";
+}
+
+<div class="panel panel-info panelBackground">
+    <div class="panel-heading"><h3 class="text-dark">Managers</h3></div>
+    <div class="panel-body">
+		<br/>
+		<button class="btn btn-info" data-toggle="modal" id="addManager">Add Manager</button>
+        
+		<hr />
+
+		@Html.Grid(Model).Columns(columns =>
+   {
+   columns.Add().Encoded(false).Sanitized(false)
+	  .RenderValueAs(d =>
+		@<b>
+			<a href="#" title="Edit" onclick="editManager('@d.Id')"><i class="fa fa-edit"></i></a>
+		</b>);
+	columns.Add().Encoded(false).Sanitized(false)
+.RenderValueAs(d =>
+@<b>
+	<a href="#" onclick="removeManager('@d.Id')"><i class="fa fa-trash"></i></a>
+</b>);
+       //columns.Add(c => c.Id).Titled("Client ID");
+       columns.Add(c => c.Name).Titled("Name").Filterable(true);
+       columns.Add(c => c.Email).Titled("Email").Filterable(true);
+       columns.Add(c => c.Username).Titled("Username").Filterable(true);
+       columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.ActionLink("Details", "Details", new { id = o.Id }));
+   }).WithPaging(20).Sortable(true).Selectable(true)
+
+
+@using (Ajax.BeginForm("Register", "Account", new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "frmCreateManager", OnSuccess= "success" }))
+{
+		<div class="modal fade" id="addManagerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">New Contract Manager</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="frmCreateManager">
+						@Html.Action("Create", "ContractManager")						
+					</div>
+					<div class="modal-footer">
+						<button class="btn" data-dismiss="modal">Cancel</button>
+						<input type="submit" class="btn btn-info" value="Add" />
+					</div>
+				</div>
+			</div>
+		</div>
+}
+
+@using (Ajax.BeginForm("Edit", "ContractManager", new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "modalManagerBody", OnSuccess = "success" }))
+{
+		<div class="modal fade" id="editManagerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Edit Contract Manager</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div id="modalManagerBody" class="modal-body">
+					</div>
+					<div class="modal-footer">
+						<button class="btn" data-dismiss="modal">Cancel</button>
+						<input type="submit" class="btn btn-info" value="Update" />
+					</div>
+				</div>
+			</div>
+		</div>
+}
+    </div>
+</div>
+	
+
+<script type="text/javascript">
+
+	$("#addManager").on('click', function () {
+		$('#addManagerModal').modal({
+			keyboard: false,
+		}).show();
+	});
+
+	function editManager(managerId) {
+		$.ajax({
+			url: '/ContractManager/Edit/' + managerId,
+			success: function (data) {
+				$('#modalManagerBody').html(data);
+				$('#editManagerModal').modal({
+					keyboard: false,
+				}).show();
+			}
+		});
+	}
+
+	function success() {
+		if ($(".validation-summary-errors").length == 0) {
+			$('#addManagerModal').modal('hide');
+			$('#editManagerModal').modal('hide');
+			location.reload();
+		}
+	}
+
+	function removeManager(Id)
+	{
+		var x = confirm("Are you sure you want to delete?");
+		if (x)
+			$.ajax({
+				url: '/ContractManager/Delete/' + Id,
+				success: function (data) {
+					if (data == true) {
+						location.reload();
+					}
+				}
+			});
+		else
+			return false;
+	}
+
+</script>

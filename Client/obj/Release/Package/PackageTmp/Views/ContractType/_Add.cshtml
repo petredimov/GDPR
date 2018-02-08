@@ -1,0 +1,36 @@
+﻿@using Client.Models
+@{
+    ViewBag.Title = "Contract Management";
+}
+
+@model ContractTypeViewModel
+
+@using (Html.BeginForm("Create", "ContractType", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+<div class="modal-body">
+	
+	@Html.AntiForgeryToken()
+	<div class="form-horizontal">
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="row">
+				@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+			</div>
+
+            @Html.LabelFor(model => model.Data, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="row">
+                @Html.TextBoxFor(model => model.Data, new { type = "file", accept = ".pdf" })
+                @Html.ValidationMessageFor(model => model.Data," ", new { @class = "text-danger" })
+            </div>
+		</div>
+	</div>
+
+</div>
+<div class="modal-footer">
+	<button class="btn" data-dismiss="modal">Cancel</button>
+    <input class="btn btn-info" type="submit" value="Add" />   
+</div>
+}

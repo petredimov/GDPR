@@ -1,0 +1,209 @@
+﻿@using GridMvc.Html
+@using Client.Models
+@model IEnumerable<UserViewModel>
+
+@{
+	ViewBag.Title = "Contract Management";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel panel-info panelBackground">
+	<div class="panel-heading"><h3 class="text-dark">Users</h3></div>
+	<div class="panel-body">
+		<br />
+		<button class="btn btn-info" data-toggle="modal" id="addUser">
+			Add Contract User
+		</button>
+
+		<div class="row">
+			<div class="col-md-8">
+
+			</div>
+			@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+			{
+				<div class="col-md-2">
+					@using (Html.BeginForm("ExportUsers", "ContractUser", FormMethod.Post))
+					{
+						<button type="submit" class="btn btn-info" onclick="ExportUser()" id="btnExportUser">Export Users</button>
+					}
+
+				</div>
+			}
+			<div class="col-md-2">
+				@using (Html.BeginForm("ExportToCsv", "ContractUser", FormMethod.Post))
+				{
+					<button type="submit" class="btn btn-info">Export to CSV</button>
+				}
+			</div>
+			
+			
+		</div>
+
+		<br />
+
+		@Html.Grid(Model).Columns(columns =>
+								{
+									columns.Add().Encoded(false).Sanitized(false)
+								  .RenderValueAs(d =>
+							@<b>
+								<a href="#" title="Edit" onclick="editUser('@d.Id')"><i class="fa fa-edit"></i></a>
+							</b>);
+
+										columns.Add().Encoded(false).Sanitized(false)
+.RenderValueAs(d =>
+											@<b>
+												 <a href="#" onclick="removeUser('@d.Id')"><i class="fa fa-trash"></i></a>
+											</b>);
+
+
+								columns.Add(c => c.Name).Titled("Name").Filterable(true);
+								columns.Add(c => c.Email).Titled("Email").Filterable(true);
+								columns.Add(c => c.Address).Titled("Address").Filterable(true);
+								columns.Add(c => c.CompanyName).Titled("Company Name").Filterable(true);
+								columns.Add(c => c.PhoneNumber).Titled("Phone number");
+								columns.Add()
+	.Encoded(false)
+	.Sanitized(false)
+	.RenderValueAs(o => Html.ActionLink("Details", "Details", new { id = o.Id }));
+								columns.Add().Encoded(false).Sanitized(false)
+						 .RenderValueAs(c =>
+																@<b>
+																	<button class="btn btn-info" onclick="SendContract('@c.Id')">Send Contract</button>
+																</b>);
+
+											}).WithPaging(20).Sortable(true).Selectable(true)
+
+
+@using (Ajax.BeginForm("Register", "Account", new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "frmCreateUser", OnSuccess= "success" }))
+{
+		<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">New Contract User</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="frmCreateUser">
+						@Html.Action("Create", "ContractUser")
+					</div>
+					<div class="modal-footer">
+						<button class="btn" data-dismiss="modal">Cancel</button>
+						<input type="submit" class="btn btn-info" value="Add" id="btnAdd" />
+					</div>
+				</div>
+			</div>
+		</div>
+}
+@using (Ajax.BeginForm("Edit", "ContractUser", new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "modalBody", OnSuccess= "success" }))
+{
+		<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Edit Contract User</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div id="modalBody" class="modal-body">
+					</div>					
+					<div class="modal-footer">
+						<button class="btn" data-dismiss="modal">Cancel</button>
+						<input type="submit" class="btn btn-info" value="Update" id="btnEdit" />
+					</div>
+				</div>
+			</div>
+		</div>
+}
+		<div class="modal fade" id="sendContractModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Select contract</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div id="sendContractBody" class="modal-body">
+					</div>					
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<script type="text/javascript">
+
+    $("#btnExportUser").on('click', function () {
+      alert("Export may take few minites...please wait")
+    });
+
+    $("#btnAdd").on('click', function () {
+        $("body").css("cursor", "progress");
+    });
+
+    $("#btnEdit").on('click', function () {
+        $("body").css("cursor", "progress");
+    });
+    
+
+	$("#addUser").on('click', function () {
+		$('#addUserModal').modal({
+			keyboard: false,
+		}).show();
+    });
+
+	function editUser(userId) {
+		$.ajax({
+			url: '/ContractUser/Edit/' + userId,
+			success: function (data) {
+				$('#modalBody').html(data);
+				$('#editUserModal').modal({
+					keyboard: false,
+				}).show();
+			}
+		});
+	}
+
+    function SendContract(userId) {
+
+		$.ajax({
+             type: "GET",
+             url: '@Url.Action("SendContract", "ContractUser")',
+             data: { userId: userId},
+			 success: function (data) {
+				$('#sendContractBody').html(data);
+				$('#sendContractModal').modal({
+					keyboard: false,
+				}).show();
+			}
+		});
+
+	}
+
+	function success() {
+		if ($(".validation-summary-errors").length == 0) {
+			$('#frmCreateUser').modal('hide');
+			$('#modalBody').modal('hide');
+			location.reload();
+		}
+	}	
+
+	function removeUser(Id) {
+		var x = confirm("Are you sure you want to delete?");
+		if (x)
+			$.ajax({
+				url: '/ContractUser/Delete/' + Id,
+				success: function (data) {
+					if (data == true) {
+						location.reload();
+					}
+				}
+			});
+		else
+			return false;
+	}
+
+</script>

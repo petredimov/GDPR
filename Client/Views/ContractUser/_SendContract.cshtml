@@ -1,0 +1,70 @@
+﻿@using GridMvc.Html
+@using Client.Models
+@model SendContractViewModel
+@{
+    ViewBag.Title = "_SendContract";
+}
+@*@using (Html.BeginForm("Send", "ContractUser", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{*@
+    <div class="modal-body">
+		<div class="form-group">
+			@Html.HiddenFor(model => model.UserId)
+			@Html.HiddenFor(model => model.ManagerId)
+			<div class="row">
+				<select class="form-control" id="ddContractTypes"></select>
+			</div>
+		</div>
+    </div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal">Cancel</button>
+		@*<input class="btn btn-info" type="submit" value="Send" />*@
+		<button class="btn btn-info" onclick="Send()" id="btnSend">Send</button>
+	</div>
+       
+ @*}*@
+
+<script type="text/javascript">
+
+     $(document).ready(function () {
+        $.getJSON('@Url.Action("GetContractTypes", "ContractUser")', function (result) {
+            FillDropdown("ddContractTypes", result.result)
+        });
+    });
+
+
+     function FillDropdown(selector, vData) {
+         if (vData.length > 0) {
+             var vItems = [];
+             for (var i in vData) {
+                 if (vData[i].Selected)
+                     vItems.push('<option selectedselected=selected value="' + vData[i].Value + '">' + vData[i].Text + '</option>');
+                 else
+                     vItems.push('<option value="' + vData[i].Value + '">' + vData[i].Text + '</option>');
+             }
+             $('#' + selector).empty();
+             $('#' + selector).append(vItems.join(''));
+             return true;
+         }
+         else {
+             $('#' + selector).empty();
+             return false;
+         }
+     }  
+
+    function Send()
+    {
+        $("body").css("cursor", "progress");
+        $.ajax({
+                  type: "GET",
+                    url: '@Url.Action("Send", "ContractUser")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { selectedContractType: $('#ddContractTypes').val(), userId: '@Model.UserId' },
+                    dataType: "json",
+					success: function (data) {
+						console.log(data);
+                        $('#sendContractModal').modal('hide');
+                        $("body").css("cursor", "default");
+                    }
+        });
+    }
+    </script>

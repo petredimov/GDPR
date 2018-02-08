@@ -1,0 +1,88 @@
+﻿@using GridMvc.Html
+@using Client.Models
+
+@model UserViewModel
+@{
+	ViewBag.Title = "UserDetails";
+}
+
+
+<form id="UserForm">
+	<div>
+		
+		<br />
+		@Html.HiddenFor(model => model.Id)
+		@Html.HiddenFor(model => model.UserId)
+		@Html.HiddenFor(model => model.SecurityStamp)
+		<div class="row">
+			<div class="col-md-4">
+				@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
+				@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+			<div class="col-md-4">
+				@Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label" })
+				@Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+			<div class="col-md-4">
+				@Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
+				@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+		</div>
+		<br />
+		<div class="row">
+			<div class="col-md-4">
+				@Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label" })
+				@Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+			<div class="col-md-4">
+				@Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label" })
+				@Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+			<div class="col-md-4">
+				@Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })
+				@Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+		</div>
+		<br />
+		<div class="row">
+			<div class="col-md-4">
+				@Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label" })
+				@Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+			
+		</div>
+		<br />
+		<div class="row">
+			<div class="col-md-4">
+			</div>
+			<div class="col-md-4">
+			</div>
+			<div class="col-md-4">
+				<button class="btn btn-info" id="btnSubmitUser">UpdateUser</button>
+			</div>
+		</div>
+		<hr />
+	</div>	
+</form>
+
+<script type="text/javascript">
+	$("#btnSubmitUser").click(function () {
+
+		$.ajax({
+			type: "POST",
+			url: '/Contract/UpdateUser',
+			data: $('#UserForm').serialize(),
+			dataType: 'json',
+			success: function (result) {
+				if (result) {
+					alert("Successfully updated user");
+				}
+				else {
+					alert("Error in update user");
+				}
+			}
+		})
+		return false;
+	});
+
+</script>

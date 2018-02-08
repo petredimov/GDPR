@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="GdprClient" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^D:\\GDPR\\ContractManager\\Client\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^D:\\GDPR\\ContractManager\\Client\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="DatabaseNamespace.DatabaseContext-Web.config Connection String" description="" value="DatabaseNamespace.DatabaseContext_ConnectionString" tags="">
+    <parameterEntry kind="XmlFile" scope="D:\\GDPR\\ContractManager\\Client\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DatabaseNamespace.DatabaseContext']/@connectionString" />
+  </parameter>
+</parameters>

@@ -1,0 +1,68 @@
+﻿@using GridMvc.Html
+@using Client.Models
+@model ContractViewModel
+@{
+	ViewBag.Title = "_ContractDetail";
+}
+
+<form id="ContractForm">
+
+	<div class="text-center">
+		<br />
+		<object id='pdfbox' type="application/pdf" data="@Url.Action("GeneratePDFByContracTypetId", "Contract", new { contractId = @Model.TypeId })"></object>
+
+		<div class="form-group">
+			<div>
+
+			</div>
+			@Html.CheckBoxFor(model => model.Status, new { @class = "control-label" })
+			@Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label" })
+
+		</div>
+	</div>
+
+	<div class="row" hidden="hidden">
+		@Html.TextBoxFor(model => model.Id, new { @class = "hidden" })
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+		</div>
+		<div class="col-md-4">
+		</div>
+		<div class="col-md-4">
+			<button class="btn btn-info" id="btnSubmitContract">UpdateContract</button>
+		</div>
+	</div>
+	<br />
+</form>
+
+<style type="text/css">
+	#pdfbox {
+		width: 100%;
+		height: 500px;
+		border: 5px solid #ccc;
+	}
+</style>
+<script type="text/javascript">
+	$("#btnSubmitContract").click(function () {
+
+		$.ajax({
+			type: "POST",
+			url: '/Contract/SubmitContract',
+			data: $('#ContractForm').serialize(),
+			dataType: 'json',
+			success: function (result) {
+				if (result) {
+                    alert("Successfully updated contract");
+                    window.location.href = 'http://gdprclient.azurewebsites.net'
+				}
+				else {
+					alert("Error in update user");
+				}
+			}
+		})
+		return false;
+	});
+</script>
+
